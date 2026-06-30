@@ -1,10 +1,13 @@
 import TodoItem from '@/components/todo/TodoItem';
+import { fetchTodo } from '@/lib/data/todo';
 
-export default function TodoList() {
+export default async function TodoList() {
+  const todos = await fetchTodo();
   return (
     <div className="border-y border-y-gray-200 divide-y divide-gray-200">
-      <TodoItem title="Test1" status={false} />
-      <TodoItem title="Test2" status={true} />
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} {...todo} />
+      ))}
     </div>
   );
 }
