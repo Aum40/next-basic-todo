@@ -1,7 +1,17 @@
 import prisma from '@/lib/db/prisma';
 
-export function fetchTodo() {
+type QueryOption = {
+  searchTerm?: string;
+};
+
+export function fetchTodo(option: QueryOption = {}) {
   return prisma.todo.findMany({
+    where: {
+      title: {
+        contains: option.searchTerm,
+        mode: 'insensitive'
+      }
+    },
     orderBy: {
       updatedAt: 'desc'
     }
