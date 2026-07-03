@@ -6,13 +6,17 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Edit Todo'
+  title: 'Edit Todo',
 };
 
 export default async function EditTodoPage(
-  props: PageProps<'/todo/[todoId]/edit'>
+  props: PageProps<'/todo/[todoId]/edit'>,
 ) {
   const { todoId } = await props.params;
+
+  if (isNaN(+todoId)) {
+    throw new Error('invalid parameter type Todo');
+  }
 
   const todo = await getTodoById(+todoId);
   if (!todo) {
@@ -21,15 +25,15 @@ export default async function EditTodoPage(
 
   const defaultValues: TodoFormInput = {
     title: todo.title,
-    status: todo.status ? 'true' : 'false'
+    status: todo.status ? 'true' : 'false',
   };
 
   const onSubmitAction = updateTodo.bind(null, +todoId);
 
   return (
-    <main className="p-8">
-      <div className="bg-white rounded-2xl p-8 flex flex-col gap-8">
-        <h1 className="text-2xl font-semibold">Edit Todo</h1>
+    <main className='p-8'>
+      <div className='bg-white rounded-2xl p-8 flex flex-col gap-8'>
+        <h1 className='text-2xl font-semibold'>Edit Todo</h1>
         <TodoForm
           defaultValues={defaultValues}
           onSubmitAction={onSubmitAction}

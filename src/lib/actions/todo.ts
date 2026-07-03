@@ -1,9 +1,11 @@
 'use server';
 
 import prisma from '@/lib/db/prisma';
-import { transformTodoFormSchema } from '@/lib/schemas/todo';
-import { refresh, revalidatePath } from 'next/cache';
+import { LoginInput, transformTodoFormSchema } from '@/lib/schemas/todo';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import bcrypt from 'bcrypt';
+import { signIn, signOut } from '@/lib/auth/todo';
 
 export async function createTodo(input: unknown) {
   const parsed = transformTodoFormSchema.safeParse(input);
@@ -31,4 +33,23 @@ export async function deleteTodo(id: number) {
   await prisma.todo.delete({ where: { id } });
   // refresh();
   revalidatePath('/todo');
+}
+
+export async function registerAction(input: LoginInput) {
+  const hashed = await bcrypt.hash(input.password, 12);
+  await prisma.user.create({
+    data: {
+      email: input.email,
+      password: hashed,
+    },
+  });
+  redirect('/login');
+}
+
+export async function login(input: LoginInput) {
+  await signIn('credentials', { ...input, redirectTo: '/dashboard' });
+}
+
+export async function logout() {
+  await signOut();
 }
