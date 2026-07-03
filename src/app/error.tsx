@@ -12,3 +12,13 @@ export default function Error() {
     </main>
   );
 }
+
+{
+  /* <RootLayout>
+    <ErrorBoundary>
+        <Suspent>
+
+        </Suspent>
+    </ErrorBoundary>
+</RootLayout> */
+}

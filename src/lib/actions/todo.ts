@@ -15,6 +15,7 @@ export async function createTodo(input: unknown) {
 
   await prisma.todo.create({ data: parsed.data });
   // return { success: true };
+  revalidatePath('/dashboard');
   redirect('/todo');
 }
 
@@ -26,12 +27,14 @@ export async function updateTodo(id: number, input: unknown) {
 
   await prisma.todo.update({ data: parsed.data, where: { id } });
   // return { success: true };
+  revalidatePath('/dashboard');
   redirect('/todo');
 }
 
 export async function deleteTodo(id: number) {
   await prisma.todo.delete({ where: { id } });
   // refresh();
+  revalidatePath('/dashboard');
   revalidatePath('/todo');
 }
 
